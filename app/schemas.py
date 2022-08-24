@@ -1,6 +1,6 @@
 from app import ma
 from flask import current_app
-from app.models import User, UserType, Post
+from app.models import User
 from marshmallow import fields, validates, validates_schema, ValidationError
 
 import re
@@ -12,18 +12,16 @@ import re
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
-        exclude = ['password', 'posts']
+        exclude = ['password']
 
 
 #
 # Validates user registration input.
 #
 class UserRegistrationSchema(ma.ModelSchema):
-    username = fields.String(required=True)
-    email = fields.String(required=True)
-    password = fields.String(required=True)
-    password2 = fields.String(require=True, load_only=True)
-    type = fields.String(required=True)
+    username = fields.String(required = True)
+    email = fields.String(required = True)
+    password = fields.String(required = True)
 
     @validates_schema
     def validate_registration(self, data, **kwargs):
@@ -49,23 +47,8 @@ class UserRegistrationSchema(ma.ModelSchema):
         if "password" not in userinfo or userinfo["password"] == "":
             valerr.messages["password"] = "Password field is blank."
             foundError = True
-        elif len(userinfo["password"]) < 8:
+        elif len(userinfo["password"]) < 4:
             valerr.messages["password"] = "Password is too short. Must be 8 or more characters"
-            foundError = True
-        elif not (re.match("\w*[A-Z]", userinfo["password"])
-                and re.match("\w*[a-z]", userinfo["password"])
-                and re.match("\w*[0-9]", userinfo["password"])):
-            valerr.messages["password"] = "Password must include an uppercase character, lowercase character, and number."
-            foundError = True
-        elif "password2" not in userinfo or userinfo["password2"] == "":
-            valerr.messages["password2"] = "Please enter the password again."
-            foundError = True
-        elif userinfo["password"] != userinfo["password2"]:
-            valerr.messages["password2"] = "Passwords must match."
-            foundError = True
-
-        if "type" not in userinfo or userinfo["type"] not in UserType.__members__:
-            valerr.messages["type"] = "Invalid value."
             foundError = True
 
         if foundError:
@@ -78,14 +61,4 @@ class UserRegistrationSchema(ma.ModelSchema):
 #
 # Common representation of a Post
 #
-class PostSchema(ma.ModelSchema):
-    class Meta:
-        model = Post
-        exclude = ['versions']
-
-
-class PostWithUser(ma.ModelSchema):
-    username = fields.String(required=True)
-    post = fields.Nested(PostSchema)
-    class Meta:
-        model = Post
+# class

@@ -16,9 +16,9 @@ This repository demonstrates a solid foundation for building a protected API wit
 Configure a virtual environment, activate it and then install the requirements.
 
 ```bash
-$ virtualenv venv -p python3
-$ . venv/bin/activate
-$ pip install -r requirements.txt
+ virtualenv venv -p python3
+ . venv/bin/activate
+ pip install -r requirements.txt
 ```
 
 To display your python installed libraries run `pip freeze`.
@@ -26,9 +26,9 @@ To display your python installed libraries run `pip freeze`.
 Initialize and then migrate a local SQLite database, you should then see a local *app.db* file.  
 
 ```bash
-$ flask db init
-$ flask db migrate
-$ flask db upgrade
+ flask db init
+ flask db migrate
+ flask db upgrade
 ```
 
 You should now see a file called **app.db**. You can view the database with [DB Browser for SQLite](https://sqlitebrowser.org/) or IntelliJ also has a plugin.

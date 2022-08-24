@@ -11,7 +11,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 # This function is called from the /auth/token route.
 #
 def generate_auth_token(expiration=600):
-    s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+    s = Serializer(current_app.config['SECRET_KEY'], expires_in = expiration)
     return s.dumps({'id': g.user.id})
 
 
@@ -29,19 +29,24 @@ def verify_password(username_or_token, password):
     verified_by_token = True
     if not user:
         # try to authenticate with username/password
-        user = User.query.filter_by(username=username_or_token).first()
+        user = User.query.filter_by(username = username_or_token).first()
         verified_by_token = False
         if not user or not user.verify_password(password):
-            if(user):
-                current_app.logger.error("message: \"login failed\", reason: \"incorrect password\", username: \"{}\", ip: \"{}\"".format(user.username, request.remote_addr))
+            if (user):
+                current_app.logger.error(
+                    "message: \"login failed\", reason: \"incorrect password\", username: \"{}\", ip: \"{}\"".format(
+                        user.username, request.remote_addr))
                 return False
             else:
-                current_app.logger.error("message: \"login failed\", reason: \"incorrect username/{}\", ip: \"{}\"".format(message, request.remote_addr))
+                current_app.logger.error(
+                    "message: \"login failed\", reason: \"incorrect username/{}\", ip: \"{}\"".format(message,
+                                                                                                      request.remote_addr))
             return False
     g.user = user
     # If session times out, this prints the token
     if not verified_by_token:
-        current_app.logger.info("message: \"login successful\", username: \"{}\", ip: \"{}\"".format(user.username, request.remote_addr))
+        current_app.logger.info(
+            "message: \"login successful\", username: \"{}\", ip: \"{}\"".format(user.username, request.remote_addr))
     else:
         current_app.logger.info("message: \"logged in with token\", ip: \"{}\"".format(request.remote_addr))
     return True
@@ -61,6 +66,6 @@ def verify_auth_token(token):
         return [None, message]  # valid token, but expired
     except BadSignature:
         message = "invalid token"
-        return [None, message] # invalid token
+        return [None, message]  # invalid token
     user = User.query.get(data['id'])
     return [user, ""]
