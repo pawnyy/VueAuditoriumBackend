@@ -1,9 +1,29 @@
 from app import ma
 from flask import current_app
-from app.models import User
+from app.models import User, Item
 from marshmallow import fields, validates, validates_schema, ValidationError
 
 import re
+
+
+class ItemSchema(ma.ModelSchema):
+    class Meta:
+        model = Item
+
+    quantity = fields.Method('get_quantity')
+
+    def get_quantity(self, obj):
+        return obj.quantity()
+
+class AllItemSchema(ma.ModelSchema):
+    class Meta:
+        model = Item
+        exclude = ('checkouts', 'created', 'updated')
+
+    quantity = fields.Method('get_quantity')
+
+    def get_quantity(self, obj):
+        return obj.quantity()
 
 
 #

@@ -47,20 +47,18 @@ class User(BaseModel):
         return self.superadmin
 
 
-
 class Item(BaseModel):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(64), index = True)
+    name = db.Column(db.String(64), index = True, nullable = False, unique = True)
     description = db.Column(db.String(2048), index = True)
-    max_quantity = db.Column(db.Integer, index = True)
+    max_quantity = db.Column(db.Integer, index = True, nullable = False)
     checkouts = db.relationship('Checkout', backref = 'item', lazy = 'dynamic')
 
-    @property
     def quantity(self):
-        quantity = 0
+        quantity = self.max_quantity
         for checkout in self.checkouts:
-            quantity += checkout.quantity
+            quantity -= checkout.quantity
         return quantity
 
 

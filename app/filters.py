@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import g, abort
+from flask import g, abort, current_app
 
 
 def is_admin(api_method):
@@ -8,6 +8,7 @@ def is_admin(api_method):
         if g.user and g.user.is_admin():
             return api_method(*args, **kwargs)
         else:
+            current_app.logger.info('User is not admin')
             abort(401)
 
     return check_is_admin

@@ -9,7 +9,6 @@ from flask.logging import default_handler
 import app.filters as filters_util
 import logging
 
-
 db = SQLAlchemy()
 migrate = Migrate()
 auth = HTTPBasicAuth()
@@ -29,17 +28,21 @@ def create_app(config_class=Config):
     application.register_blueprint(error_bp)
 
     from app.authentication import bp as authentication_bp
-    application.register_blueprint(authentication_bp, url_prefix="/api")
+    application.register_blueprint(authentication_bp, url_prefix = "/api")
 
     from app.registration import bp as registration_bp
-    application.register_blueprint(registration_bp, url_prefix="/api")
+    application.register_blueprint(registration_bp, url_prefix = "/api")
 
     from app.user import bp as user_bp
-    application.register_blueprint(user_bp, url_prefix="/api")
+    application.register_blueprint(user_bp, url_prefix = "/api")
 
-    CORS(application, resources={r"/*": {"origins": ["http://localhost:8080"], "supports_credentials": True}}, supports_credentials=True)
+    from app.items import bp as items_bp
+    application.register_blueprint(items_bp, url_prefix = "/api")
 
-    application.logger.setLevel('INFO') # Configurable log level
+    CORS(application, resources = {r"/*": {"origins": ["http://localhost:8080"], "supports_credentials": True}},
+         supports_credentials = True)
+
+    application.logger.setLevel('INFO')  # Configurable log level
 
     # Remove default logger
     application.logger.removeHandler(default_handler)
