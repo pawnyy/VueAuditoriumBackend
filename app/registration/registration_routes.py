@@ -30,11 +30,9 @@ def create_user():
 
         # Create user
         db.session.add(user)
-        print(user)
         db.session.commit()
-        print(userinfo)
         return (UserSchema().dump(user), 201,
-                {'Location': url_for('user.get_user', username = user.username, _external = True)})
+                {'Location': url_for('user.get_self', username = user.username, _external = True)})
     except ValidationError as err:
         current_app.logger.info(err.messages)
         return err.messages, 500

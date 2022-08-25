@@ -8,6 +8,8 @@ from app.authentication import bp
 from flask import jsonify, g
 from app import auth
 from app.authentication import authentication_service as auth_service
+
+
 #
 # Generate a new API token
 #
@@ -15,4 +17,4 @@ from app.authentication import authentication_service as auth_service
 @auth.login_required
 def get_auth_token():
     token = auth_service.generate_auth_token(600)
-    return jsonify({'token': token.decode('ascii'), 'duration': 600})
+    return jsonify({'token': token.decode('ascii'), 'duration': 60 * 60 * 24 * 7})

@@ -37,7 +37,7 @@ def create_app(config_class=Config):
     from app.user import bp as user_bp
     application.register_blueprint(user_bp, url_prefix="/api")
 
-    CORS(application, resources={r"/*": {"origins": "*"}})
+    CORS(application, resources={r"/*": {"origins": ["http://localhost:8080"], "supports_credentials": True}}, supports_credentials=True)
 
     application.logger.setLevel('INFO') # Configurable log level
 

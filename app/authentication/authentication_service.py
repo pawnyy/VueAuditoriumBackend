@@ -22,31 +22,31 @@ def generate_auth_token(expiration=600):
 # the user's actual credentials or a generated token.
 #
 @auth.verify_password
-def verify_password(username_or_token, password):
+def verify_password(email_or_token, password):
     current_app.logger.info(request)
     # first try to authenticate by token
-    [user, message] = verify_auth_token(username_or_token)
+    [user, message] = verify_auth_token(email_or_token)
     verified_by_token = True
     if not user:
         # try to authenticate with username/password
-        user = User.query.filter_by(username = username_or_token).first()
+        user = User.query.filter_by(email = email_or_token).first()
         verified_by_token = False
         if not user or not user.verify_password(password):
             if (user):
                 current_app.logger.error(
                     "message: \"login failed\", reason: \"incorrect password\", username: \"{}\", ip: \"{}\"".format(
-                        user.username, request.remote_addr))
+                        user.email, request.remote_addr))
                 return False
             else:
                 current_app.logger.error(
-                    "message: \"login failed\", reason: \"incorrect username/{}\", ip: \"{}\"".format(message,
+                    "message: \"login failed\", reason: \"incorrect email/{}\", ip: \"{}\"".format(message,
                                                                                                       request.remote_addr))
             return False
     g.user = user
     # If session times out, this prints the token
     if not verified_by_token:
         current_app.logger.info(
-            "message: \"login successful\", username: \"{}\", ip: \"{}\"".format(user.username, request.remote_addr))
+            "message: \"login successful\", email: \"{}\", ip: \"{}\"".format(user.email, request.remote_addr))
     else:
         current_app.logger.info("message: \"logged in with token\", ip: \"{}\"".format(request.remote_addr))
     return True

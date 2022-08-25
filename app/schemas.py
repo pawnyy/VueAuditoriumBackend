@@ -48,7 +48,7 @@ class UserRegistrationSchema(ma.ModelSchema):
             valerr.messages["password"] = "Password field is blank."
             foundError = True
         elif len(userinfo["password"]) < 4:
-            valerr.messages["password"] = "Password is too short. Must be 8 or more characters"
+            valerr.messages["password"] = "Password is too short. Must be 4 or more characters"
             foundError = True
 
         if foundError:
