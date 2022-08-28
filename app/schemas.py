@@ -1,9 +1,21 @@
 from app import ma
 from flask import current_app
-from app.models import User, Item
+from app.models import User, Item, Checkout
 from marshmallow import fields, validates, validates_schema, ValidationError
 
 import re
+
+
+class CheckoutSchema(ma.ModelSchema):
+    class Meta:
+        model = Checkout
+
+    user = fields.Method('get_user')
+
+    def get_user(self, obj):
+        # Get the user from the database and return the username
+        user = User.query.get(obj.user_id)
+        return user.username
 
 
 class ItemSchema(ma.ModelSchema):
@@ -14,6 +26,7 @@ class ItemSchema(ma.ModelSchema):
 
     def get_quantity(self, obj):
         return obj.quantity()
+
 
 class AllItemSchema(ma.ModelSchema):
     class Meta:
@@ -76,7 +89,6 @@ class UserRegistrationSchema(ma.ModelSchema):
 
     class Meta:
         model = User
-
 
 #
 # Common representation of a Post

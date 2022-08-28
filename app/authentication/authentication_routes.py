@@ -16,5 +16,5 @@ from app.authentication import authentication_service as auth_service
 @bp.route('/auth/token')
 @auth.login_required
 def get_auth_token():
-    token = auth_service.generate_auth_token(600)
+    token = auth_service.generate_auth_token(60 * 60 * 24 * 7)
     return jsonify({'token': token.decode('ascii'), 'duration': 60 * 60 * 24 * 7})

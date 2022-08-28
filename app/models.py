@@ -58,7 +58,8 @@ class Item(BaseModel):
     def quantity(self):
         quantity = self.max_quantity
         for checkout in self.checkouts:
-            quantity -= checkout.quantity
+            if checkout.returned is False:
+                quantity -= checkout.quantity
         return quantity
 
 
@@ -68,7 +69,9 @@ class Checkout(BaseModel):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     item_id = db.Column(db.Integer, db.ForeignKey('items.id'))
     quantity = db.Column(db.Integer, index = True)
-    return_date = db.Column(db.DateTime, index = True)
+    return_date = db.Column(db.Date, index = True)
+    description = db.Column(db.String(2048))
+    returned = db.Column(db.Boolean, default = False)
 
 
 sa.orm.configure_mappers()
