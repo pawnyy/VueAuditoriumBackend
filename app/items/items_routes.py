@@ -7,14 +7,15 @@ from app.models import Item, Checkout
 from app.schemas import ItemSchema, AllItemSchema, CheckoutSchema
 
 
-@bp.route('/items/<int:id>/checkouts', methods=['GET'])
+@bp.route('/items/<int:id>/checkouts', methods = ['GET'])
 @filters.is_admin
 def get_checkouts(id):
     item = Item.query.get_or_404(id)
     checkouts = item.checkouts.all()
-    return CheckoutSchema(many=True).jsonify(checkouts)
+    return CheckoutSchema(many = True).jsonify(checkouts)
 
-@bp.route('/checkouts/<int:id>', methods=['PATCH'])
+
+@bp.route('/checkouts/<int:id>', methods = ['PATCH'])
 @filters.is_admin
 def update_checkout(id):
     checkout = Checkout.query.get_or_404(id)
@@ -24,7 +25,8 @@ def update_checkout(id):
     db.session.commit()
     return CheckoutSchema().jsonify(checkout)
 
-@bp.route('/items/checkout', methods=['POST'])
+
+@bp.route('/items/checkout', methods = ['POST'])
 def checkout_item():
     data = request.get_json()
     item = Item.query.get_or_404(data['item_id'])
@@ -47,6 +49,7 @@ def get_items():
     items = Item.query.all()
     return AllItemSchema().jsonify(items, many = True)
 
+
 @bp.route('/items/<int:id>', methods = ['DELETE'])
 @filters.is_admin
 def delete_item(id):
@@ -55,6 +58,7 @@ def delete_item(id):
     db.session.delete(item)
     db.session.commit()
     return '', 204
+
 
 @bp.route('/items/<int:id>', methods = ['GET'])
 def get_item(id):

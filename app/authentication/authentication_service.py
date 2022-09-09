@@ -34,21 +34,19 @@ def verify_password(email_or_token, password):
         if not user or not user.verify_password(password):
             if (user):
                 current_app.logger.error(
-                    "message: \"login failed\", reason: \"incorrect password\", username: \"{}\", ip: \"{}\"".format(
-                        user.email, request.remote_addr))
+                    f'message: "login failed", reason: "incorrect password", username: "{user.email}", ip: "{request.remote_addr}"')
                 return False
             else:
                 current_app.logger.error(
-                    "message: \"login failed\", reason: \"incorrect email/{}\", ip: \"{}\"".format(message,
-                                                                                                      request.remote_addr))
+                    f'message: "login failed", reason: "incorrect email/{message}", ip: "{request.remote_addr}"')
             return False
     g.user = user
     # If session times out, this prints the token
     if not verified_by_token:
         current_app.logger.info(
-            "message: \"login successful\", email: \"{}\", ip: \"{}\"".format(user.email, request.remote_addr))
+            f'message: "login successful", email: "{user.email}", ip: "{request.remote_addr}"')
     else:
-        current_app.logger.info("message: \"logged in with token\", ip: \"{}\"".format(request.remote_addr))
+        current_app.logger.info(f'message: "logged in with token", ip: "{request.remote_addr}"')
     return True
 
 

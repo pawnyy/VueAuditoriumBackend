@@ -5,7 +5,7 @@ from flask import g, abort, current_app
 def is_admin(api_method):
     @wraps(api_method)
     def check_is_admin(*args, **kwargs):
-        if g.user and g.user.is_admin():
+        if g.user and (g.user.is_admin() or g.user.is_superadmin()):
             return api_method(*args, **kwargs)
         else:
             current_app.logger.info('User is not admin')
